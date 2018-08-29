@@ -37,10 +37,10 @@ tags:
 $ docker-machine create --driver=virtualbox default
 ```
 这样的话我们在`virtual box`就会新建一个虚拟机
-![1](/attachments/images/articles/2017-08-24/1.png)
+![1](/images/articles/2017-08-24/1.png)
 
 我们可以去查看`Docker IP`的地址
-![2](/attachments/images/articles/2017-08-24/2.png)
+![2](/images/articles/2017-08-24/2.png)
 
 在`hosts`文件里映射我们的`ip`地址
 ```shell
