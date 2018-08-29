@@ -1,0 +1,11 @@
+<footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	<%- partial('_common/social', null, {cache: !config.relative_link}) %>
+    <div class="copyright">
+    	<% if(theme.site.copyright) { %>
+        &copy; <%= date(new Date(), 'YYYY') %> <%= config.author || config.title %>
+        <% } %>
+        <div class="publishby">
+             <a href="http://www.miitbeian.gov.cn" target="_blank"> 苏ICP备16045385号-3 </a>
+        </div>
+    </div>
+</footer>
