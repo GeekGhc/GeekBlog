@@ -1,12 +1,28 @@
 geekghc在线社区:
     link: http://geekghc.com
-    avatar: https://lccdn.phphub.org/uploads/sites/KDiyAbV0hj1ytHpRTOlVpucbLebonxeX.png
+    avatar: http://jellybook.me/favicon.ico
     desc: "个人在线社区"
+Laracast:
+    link: https://laracasts.com/
+    avatar: https://laracasts.com/favicons/apple-touch-icon.png?v=XBrbNbbRQ4
+    desc: "Laracast site"
+掘金:
+    link: https://juejin.im/timeline
+    avatar: https://b-gold-cdn.xitu.io/favicons/v2/apple-touch-icon.png
+    desc: "掘金"
+Segmentfault:
+    link: https://segmentfault.com/
+    avatar: https://static.segmentfault.com/v-5b866405/global/img/touch-icon.png
+    desc: "Segmentfault"
+V2EX:
+    link: https://www.v2ex.com/
+    avatar: https://www.v2ex.com/static/img/icon_rayps_64.png
+    desc: "V2EX"
 laravel-china:
     link: https://laravel-china.org/
     avatar: https://lccdn.phphub.org/uploads/sites/KDiyAbV0hj1ytHpRTOlVpucbLebonxeX.png
     desc: "laravel-china社区"
 easy-wechat:
     link: https://www.easywechat.com/
-    avatar: https://lccdn.phphub.org/uploads/sites/KDiyAbV0hj1ytHpRTOlVpucbLebonxeX.png
+    avatar: https://www.easywechat.com/icons/android-icon-192x192.png
     desc: "微信开发"
