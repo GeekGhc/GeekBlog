@@ -5,7 +5,6 @@ categories:
   - Laravel
 tags:
     - laravel
-    - post
     - eloquent
 ---
 在一个社区或者技术圈中用户肯定需要去发表自己的帖子文章 而如果你以Laravel作为开发框架的话 他提供的模型关联就是通过定义各个对象的关系来处理这种应用场景

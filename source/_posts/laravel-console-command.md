@@ -5,7 +5,6 @@ categories:
   - Laravel
 tags:
     - laravel
-    - console
     - command
 ---
 Laravel 为我们提供了不同的命令行创建方式，这样一来，我们可以向定义路由一样创建自定义的命令行 这在我们项目发布的初始化的时候 非常的方便和必要

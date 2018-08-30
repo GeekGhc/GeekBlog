@@ -28,7 +28,7 @@ sidebar: custom
             ['Laravel','Thinkphp','CI'],
             ['Swoole', 'Elasticsearch','docker'],
             ['公众号', '小程序'],
-            ['Git', 'SVN','Mac','Linux'],
+            ['Git','SVN','Mac','Linux'],
             ['MySQL', 'Mongodb', 'Redis','memcache'],
         ],
 
