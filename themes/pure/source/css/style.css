@@ -3263,7 +3263,7 @@ body {
 }
 
 a {
-  color: #333333;
+  /* color: #333333; */
   text-decoration: none;
 }
 
@@ -5543,7 +5543,22 @@ pre,
 
 code {
   text-shadow: 0 1px #fff;
-  padding: 0 0.3em;
+  /* padding: 0 0.3em; */
+
+  padding: .2em 0.3em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(0, 0, 0, .04);
+  border-radius: 3px;
+  color: #c7254e;
+}
+code::before{
+  letter-spacing: -.2em;
+  content: " ";
+}
+code::after{
+  letter-spacing: -.2em;
+  content: " ";
 }
 
 pre code {

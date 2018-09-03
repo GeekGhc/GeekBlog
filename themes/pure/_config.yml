@@ -151,8 +151,8 @@ pv:
     enable: true  # 不蒜子统计
   leancloud:
     enable: false  # leancloud统计
-    app_id: # leancloud <AppID>
-    app_key: # leancloud <AppKey>
+    app_id: 3H2emKTOvxos7HRRrCibkchO-gzGzoHsz # leancloud <AppID>
+    app_key: jSkuHSEoWJbYgMRelYTK6M8N # leancloud <AppKey>
         
 # wordcount
 postCount:
