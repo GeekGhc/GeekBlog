@@ -26,17 +26,17 @@ Github项目地址 [GeekGhc/TopNews](https://github.com/GeekGhc/TopNews)
 
 ## 预览
 
-<img src="/attachments/images/articles/2017-06-20/1.gif" width = "40%" /> &nbsp;&nbsp;&nbsp; <img src="/attachments/images/articles/2017-06-20/2.gif" width = "40%" style="float:left;" />
+<img src="/images/articles/2017-06-20/1.gif" width = "40%" /> &nbsp;&nbsp;&nbsp; <img src="/images/articles/2017-06-20/2.gif" width = "40%" style="float:left;" />
 
-<img src="/attachments/images/articles/2017-06-20/01.png" width = "40%" /> &nbsp;&nbsp;&nbsp; <img src="/attachments/images/articles/2017-06-20/02.png" width = "40%" style="float:left;" />
+<img src="/images/articles/2017-06-20/01.png" width = "40%" /> &nbsp;&nbsp;&nbsp; <img src="/images/articles/2017-06-20/02.png" width = "40%" style="float:left;" />
 
-<img src="/attachments/images/articles/2017-06-20/03.png" width = "40%" /> &nbsp;&nbsp;&nbsp; <img src="/attachments/images/articles/2017-06-20/04.png" width = "40%" style="float:left;" />
+<img src="/images/articles/2017-06-20/03.png" width = "40%" /> &nbsp;&nbsp;&nbsp; <img src="/images/articles/2017-06-20/04.png" width = "40%" style="float:left;" />
 
-<img src="/attachments/images/articles/2017-06-20/05.png" width = "40%" /> &nbsp;&nbsp;&nbsp; <img src="/attachments/images/articles/2017-06-20/06.png" width = "40%" style="float:left;" />
+<img src="/images/articles/2017-06-20/05.png" width = "40%" /> &nbsp;&nbsp;&nbsp; <img src="/images/articles/2017-06-20/06.png" width = "40%" style="float:left;" />
 
-<img src="/attachments/images/articles/2017-06-20/07.png" width = "40%" /> &nbsp;&nbsp;&nbsp; <img src="/attachments/images/articles/2017-06-20/08.png" width = "40%" style="float:left;" />
+<img src="/images/articles/2017-06-20/07.png" width = "40%" /> &nbsp;&nbsp;&nbsp; <img src="/images/articles/2017-06-20/08.png" width = "40%" style="float:left;" />
 
-<img src="/attachments/images/articles/2017-06-20/09.png" width = "40%" /> &nbsp;&nbsp;&nbsp; <img src="/attachments/images/articles/2017-06-20/10.png" width = "40%" style="float:left;" />
+<img src="/images/articles/2017-06-20/09.png" width = "40%" /> &nbsp;&nbsp;&nbsp; <img src="/images/articles/2017-06-20/10.png" width = "40%" style="float:left;" />
 
 
 ## 要点摘要
