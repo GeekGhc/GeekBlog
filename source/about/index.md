@@ -25,7 +25,7 @@ sidebar: custom
             ['Webpack', 'Gulp', 'ES6', 'Html/Css', 'Less', 'Sass'],
             ['Vue', 'React'],
             ['Laravel', 'Thinkphp', 'CI'],
-            ['Swoole', 'Elasticsearch', 'docker'],
+            ['Swoole', 'Elasticsearch', 'Docker','Kubernetes'],
             ['公众号', '小程序'],
             ['Git', 'SVN', 'Mac', 'Linux'],
             ['MySQL', 'Mongodb', 'Redis', 'memcache'],
