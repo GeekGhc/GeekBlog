@@ -114,7 +114,7 @@ comment:
     uid: MTAyMC8zOTM1Ni8xNTg4Mw== # enter youyan uid 
   gitment:
     githubID: GeekGhc
-    repo: GeekBlog
+    repo: geekghc.github.io
     ClientID: 4105f76eaa6963787045
     ClientSecret: 708d4513a9055fce41d48e0c9b325fece113c61d
     lazy: false
@@ -175,7 +175,7 @@ neat_js:
   output:
   compress:
   exclude:
-    - '*.min.js' 
+    - '*.min.js'
 
 # Plugins
 plugins:
