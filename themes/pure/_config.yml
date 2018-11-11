@@ -106,17 +106,17 @@ github:
 # Gitment
 # Introduction: https://imsun.net/posts/gitment-introduction/
 comment:
-  type: livere  # 启用哪种评论系统
+  type: gitment  # 启用哪种评论系统
   disqus:  # enter disqus shortname here
   youyan: 
     uid: 1783844 # enter youyan uid 
   livere:
     uid: MTAyMC8zOTM1Ni8xNTg4Mw== # enter youyan uid 
   gitment:
-    githubID: 
+    githubID: GeekGhc
     repo: 
-    ClientID: 
-    ClientSecret: 
+    ClientID: 4105f76eaa6963787045
+    ClientSecret: 708d4513a9055fce41d48e0c9b325fece113c61d
     lazy: false
   valine: # Valine. https://valine.js.org
     appid:  # your leancloud application appid
@@ -148,9 +148,9 @@ douban:
 # PV
 pv:
   busuanzi:
-    enable: true  # 不蒜子统计
+    enable: false  # 不蒜子统计
   leancloud:
-    enable: false  # leancloud统计
+    enable: true  # leancloud统计
     app_id: 3H2emKTOvxos7HRRrCibkchO-gzGzoHsz # leancloud <AppID>
     app_key: jSkuHSEoWJbYgMRelYTK6M8N # leancloud <AppKey>
         
