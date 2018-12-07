@@ -29,6 +29,7 @@ sidebar: custom
             ['公众号', '小程序'],
             ['Git', 'SVN', 'Mac', 'Linux'],
             ['MySQL', 'Mongodb', 'Redis', 'memcache'],
+            ['Kafka','zookeeper']
         ],
 
         devTools: [

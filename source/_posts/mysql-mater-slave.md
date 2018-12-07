@@ -32,8 +32,8 @@ tags:
 为了演示可以准备两台服务器  这里我用的是[DigitalOcean](https://cloud.digitalocean.com) 作为测试服务器很是方便 
 
 选择创建两个`Droplets` 具体配置根据自己的需求来
-![first](/images/articles/2018-10-02/01.png)
-![first](/images/articles/2018-10-02/02.png)
+![one](/images/articles/2018-10-02/01.png)
+![two](/images/articles/2018-10-02/02.png)
 
 这里由于选择本地的`ssh key`因此可以无需密码登录服务器
 
@@ -45,10 +45,10 @@ $ apt-get install  mysql-server-5.7 -y
 ### 配置Mysql
 #### Master
 进入`mysql`的配置路径`/etc/mysql`
-![first](/images/articles/2018-10-02/03.png)
+![three](/images/articles/2018-10-02/03.png)
 
 这里更改`bind_ip`为内网`ip`
-![first](/images/articles/2018-10-02/04.png)
+![four](/images/articles/2018-10-02/04.png)
 
 更改`server_id=1`这里的1可以根据需要更改为一个数字一用来区分
 
@@ -80,7 +80,7 @@ mysql> FLUSH PRIVILEGES;
 ```shell
 mysql> show master status;
 ```
-![first](/images/articles/2018-10-02/05.png)
+![five](/images/articles/2018-10-02/05.png)
 
 记录下这个日志的`position`和`file`
 
@@ -122,7 +122,7 @@ mysql> start slave;
 mysql> show slave status/G
 ```
 如果`Slave_IO_Running`和`Slave_SQL_Running`都为`yes`即为成功配置
-![first](/images/articles/2018-10-02/06.png)
+![six](/images/articles/2018-10-02/06.png)
 
 这样的话在主数据库同一个数据库下的`sql`都将同步到`salve`  也就实现了我们需要的`mysql`主从复制
 
