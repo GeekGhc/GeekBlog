@@ -14,9 +14,10 @@ sidebar: custom
         profession: 'Always Believe In Yourself!',
         experience: '1年',
         address: 'Shanghai-China',
+        wechat: ghc2438462863
         education: '本科',
         github: 'https://github.com/GeekGhc',
-        site: 'https://geekghc.com',
+        site: 'https://www.geekghc.com',
         blog: 'https://blog.geekghc.com',
         email: 'gehuachun@outlook.com',
 
@@ -24,7 +25,7 @@ sidebar: custom
             ['PHP', 'Golang', 'Python', 'Java', 'C++', 'Node'],
             ['Vue', 'Webpack', 'Gulp', 'ES6', 'Html/Css', 'Less', 'Sass'],
             ['Laravel', 'Thinkphp', 'CI'],
-            ['Swoole', 'Elasticsearch', 'Docker','Kubernetes'],
+            ['Swoole', 'Elasticsearch', 'Docker', 'Kubernetes'],
             ['公众号', '小程序'],
             ['Git', 'SVN', 'Mac', 'Linux'],
             ['MySQL', 'Mongodb', 'Redis', 'memcache'],
