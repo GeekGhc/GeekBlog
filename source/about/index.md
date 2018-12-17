@@ -22,8 +22,7 @@ sidebar: custom
 
         skills: [
             ['PHP', 'Golang', 'Python', 'Java', 'C++', 'Node'],
-            ['Webpack', 'Gulp', 'ES6', 'Html/Css', 'Less', 'Sass'],
-            ['Vue', 'React'],
+            ['Vue', 'Webpack', 'Gulp', 'ES6', 'Html/Css', 'Less', 'Sass'],
             ['Laravel', 'Thinkphp', 'CI'],
             ['Swoole', 'Elasticsearch', 'Docker','Kubernetes'],
             ['公众号', '小程序'],
