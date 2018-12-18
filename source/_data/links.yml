@@ -5,7 +5,11 @@ geekghc在线社区:
 Laracast:
     link: https://laracasts.com/
     avatar: https://laracasts.com/favicons/apple-touch-icon.png?v=XBrbNbbRQ4
-    desc: "Laracast site"
+    desc: "Laracast"
+LeetCode:
+    link: https://leetcode.com
+    avatar: https://leetcode.com/static/images/LeetCode_logo_rvs.png
+    desc: "LeetCode"
 掘金:
     link: https://juejin.im/timeline
     avatar: https://b-gold-cdn.xitu.io/favicons/v2/apple-touch-icon.png
