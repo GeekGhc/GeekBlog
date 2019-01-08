@@ -2,7 +2,7 @@
 title: MySQL · 最佳实践 · 分区表基本类型(转载)
 date: 2018-11-02
 categories:
-  - MySQL
+  - SQL
 tags:
     - mysql
 ---
