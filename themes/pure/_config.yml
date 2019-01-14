@@ -196,7 +196,7 @@ profile:
   avatar: images/me.jpg
   gravatar: # Gravatar email address, if you enable Gravatar, your avatar config will be overriden
   author: GeekGhc
-  author_title: Become A Better Programmer
+  author_title: Keep thinking deeply
   author_description: 个人简介。
   location: Shanghai, China
   follow: https://github.com/GeekGhc
@@ -230,10 +230,10 @@ profile:
   # My Personal Labels
   labels:
     - PHPer
+    - Golang
     - 后端开发者
     - 前端爱好者
     - 全栈开发
-    - Geek
   # My Personal Works
   works:
     codespace:
