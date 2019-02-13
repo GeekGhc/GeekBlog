@@ -12,7 +12,7 @@ sidebar: custom
         age: 23,
         gender: '男',
         profession: 'Always Believe In Yourself!',
-        experience: '1年',
+        experience: '2年',
         address: 'Shanghai-China',
         wechat: ghc2438462863
         education: '本科',
@@ -27,13 +27,13 @@ sidebar: custom
             ['Laravel', 'Thinkphp', 'CI'],
             ['Swoole', 'Elasticsearch', 'Docker', 'Kubernetes'],
             ['公众号', '小程序'],
-            ['Git', 'SVN', 'Mac', 'Linux'],
+            ['Mac', 'Git', 'SVN', 'Linux'],
             ['MySQL', 'Mongodb', 'Redis', 'memcache'],
             ['Kafka','zookeeper','Lua']
         ],
 
         devTools: [
-            ['PHPStrom', 'VS Code', 'Sublime Text', 'PyCharm', 'GoLand'],
+            ['PHPStrom', 'VS Code', 'Sublime Text', 'GoLand', 'PyCharm'],
             ['Chrome DevTools', 'Charles', 'Postman'],
             ['SourceTree', 'Bear', 'Sketch'],
             ['SwitchHosts', 'Tunnelblick', 'Yummy'],
