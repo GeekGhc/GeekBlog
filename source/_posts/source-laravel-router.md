@@ -184,5 +184,38 @@ public function post($uri, $action = null)
 {
     return $this->addRoute('POST', $uri, $action);
 }
+public function put($uri, $action = null)
+{
+    return $this->addRoute('PUT', $uri, $action);
+}
 ```
+可以看到的是路由的注册都是通过addRoute这个方法去进行注册的
+```php
+protected function addRoute($methods, $uri, $action)
+{
+    return $this->routes->add($this->createRoute($methods, $uri, $action));
+}
+```
+而这个addRoute方法则是会将路由注册到RouteCollection 当然之前会调用路由的创建方法createRoute
 
+```php
+protected function createRoute($methods, $uri, $action)
+{
+    if ($this->actionReferencesController($action)) {
+        $action = $this->convertToControllerAction($action);
+    }
+
+    $route = $this->newRoute(
+        $methods, $this->prefix($uri), $action
+    );
+    if ($this->hasGroupStack()) {
+        $this->mergeGroupAttributesIntoRoute($route);
+    }
+
+    $this->addWhereClausesToRoute($route);
+
+    return $route;
+}
+
+```
+而这个创建路由的方法接收三个参数 分别是路由的请求方法 uri以及执行体  这执行可以使未解析的资源路径 也可以是一个闭包方法
