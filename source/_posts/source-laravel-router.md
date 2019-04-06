@@ -19,7 +19,7 @@ Route::get('/user', 'UsersController@index');
 
 通过这个路由 客户端通过`get`的`http`请求方法 请求`'/user'`这样的URI时  `laravel`会将请求重定向到`User`控制器的`index`方法  最后由该方法返回结果给客户端
 
-首先我们分析下Route这个类 是通过laravel的门面来实现 通过一种简单的方式来绑定访问到容器里的服务router。 其实这里就可以理解为通过Route::get就可以访问到router这个服务的方法 所以说上面的路由等价于:
+首先我们分析下`Route`这个类 是通过`laravel`的门面来实现 通过一种简单的方式来绑定访问到容器里的服务`router`。 其实这里就可以理解为通过`Route::get`就可以访问到`router`这个服务的方法 所以说上面的路由等价于:
 ```php
 app()->make('router')->get('user','UserController@index');
 ```
