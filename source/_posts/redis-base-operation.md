@@ -1,6 +1,6 @@
 ---
 title: Redis基本高级特性以及性能调优(转载)
-date: 2018-02-12
+date: 2019-02-12
 categories:
   - Redis
 tags:
@@ -8,7 +8,7 @@ tags:
 ---
 
 ### 概述
-`Redis`是一个开源的，基于内存的结构化数据存储媒介，可以作为数据库、缓存服务或消息服务使用。```
+`Redis`是一个开源的，基于内存的结构化数据存储媒介，可以作为数据库、缓存服务或消息服务使用。
 
 `Redis`支持多种数据结构，包括字符串、哈希表、链表、集合、有序集合、位图、`Hyperloglogs`等。
 
@@ -153,11 +153,11 @@ INCRBY sequence 100
 上述三个命令都会对`Hash`进行完整遍历，`Hash`中的`field`数量与命令的耗时线性相关，对于尺寸不可预知的`Hash`，应严格避免使用上面三个命令，而改为使用HSCAN命令进行游标式的遍历，具体请见 
 [https://redis.io/commands/scan](https://redis.io/commands/scan)
 
-Set
+### Set
 
-Redis Set是无序的，不可重复的String集合。
+`Redis Set`是无序的，不可重复的`String`集合。
 
-与Set相关的常用命令
+与`Set`相关的常用命令
 
 SADD：向指定Set中添加1个或多个member，如果指定Set不存在，会自动创建一个。时间复杂度O(N)，N为添加的member个数
 SREM：从指定Set中移除1个或多个member，时间复杂度O(N)，N为移除的member个数
