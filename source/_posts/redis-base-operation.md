@@ -159,22 +159,26 @@ INCRBY sequence 100
 
 与`Set`相关的常用命令
 
-SADD：向指定Set中添加1个或多个member，如果指定Set不存在，会自动创建一个。时间复杂度O(N)，N为添加的member个数
-SREM：从指定Set中移除1个或多个member，时间复杂度O(N)，N为移除的member个数
-SRANDMEMBER：从指定Set中随机返回1个或多个member，时间复杂度O(N)，N为返回的member个数
-SPOP：从指定Set中随机移除并返回count个member，时间复杂度O(N)，N为移除的member个数
-SCARD：返回指定Set中的member个数，时间复杂度O(1)
-SISMEMBER：判断指定的value是否存在于指定Set中，时间复杂度O(1)
-SMOVE：将指定member从一个Set移至另一个Set
-慎用的Set相关命令：
+- `SADD`：向指定`Set`中添加**1**个或多个`member`，如果指定`Set`不存在，会自动创建一个。时间复杂度`O(N)`，`N`为添加的`member`个数
+- `SREM`：从指定`Set`中移除**1**个或多个`member`，时间复杂度`O(N)`，`N`为移除的`member`个数
+- `SRANDMEMBER`：从指定`Set`中随机返回**1**个或多个`member`，时间复杂度`O(N)`，`N`为返回的`member`个数
+- `SPOP`：从指定`Set`中随机移除并返回`count个member`，时间复杂度`O(N)`，`N`为移除的`member`个数
+- `SCARD`：返回指定`Set`中的`member`个数，时间复杂度`O(1)`
+- `SISMEMBER`：判断指定的`value`是否存在于指定`Set`中，时间复杂度`O(1)`
+- `SMOVE`：将指定`member`从一个`Set`移至另一个`Set`
 
-SMEMBERS：返回指定Hash中所有的member，时间复杂度O(N)
-SUNION/SUNIONSTORE：计算多个Set的并集并返回/存储至另一个Set中，时间复杂度O(N)，N为参与计算的所有集合的总member数
-SINTER/SINTERSTORE：计算多个Set的交集并返回/存储至另一个Set中，时间复杂度O(N)，N为参与计算的所有集合的总member数
-SDIFF/SDIFFSTORE：计算1个Set与1或多个Set的差集并返回/存储至另一个Set中，时间复杂度O(N)，N为参与计算的所有集合的总member数
-上述几个命令涉及的计算量大，应谨慎使用，特别是在参与计算的Set尺寸不可知的情况下，应严格避免使用。可以考虑通过SSCAN命令遍历获取相关Set的全部member（具体请见 https://redis.io/commands/scan ），如果需要做并集/交集/差集计算，可以在客户端进行，或在不服务实时查询请求的Slave上进行。
+慎用的`Set`相关命令：
 
-Sorted Set
+- `SMEMBERS`：返回指定`Hash`中所有的`member`，时间复杂度`O(N)`
+- `SUNION/SUNIONSTORE`：计算多个`Set`的并集并返回/存储至另一个`Set`中，时间复杂度`O(N)`，`N`为参与计算的所有集合的总`member`数
+- `SINTER/SINTERSTORE`：计算多个`Set`的交集并返回/存储至另一个`Set`中，时间复杂度`O(N)`，`N`为参与计算的所有集合的总`member`数
+- `SDIFF/SDIFFSTORE`：计算**1**个`Set`与**1**或多个`Set`的差集并返回/存储至另一个`Set`中，时间复杂度`O(N)`，`N`为参与计算的所有集合的总`member`数
+
+上述几个命令涉及的计算量大，应谨慎使用，特别是在参与计算的`Set`尺寸不可知的情况下，应严格避免使用。
+
+可以考虑通过`SSCAN`命令遍历获取相关`Set`的全部`member`（具体请见 [https://redis.io/commands/scan](https://redis.io/commands/scan) ）如果需要做并集/交集/差集计算，可以在客户端进行，或在不服务实时查询请求的`Slave上`进行。
+
+### Sorted Set
 
 Redis Sorted Set是有序的、不可重复的String集合。Sorted Set中的每个元素都需要指派一个分数(score)，Sorted Set会根据score对元素进行升序排序。如果多个member拥有相同的score，则以字典序进行升序排序。
 Sorted Set非常适合用于实现排名。
