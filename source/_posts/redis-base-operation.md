@@ -180,9 +180,10 @@ INCRBY sequence 100
 
 ### Sorted Set
 
-Redis Sorted Set是有序的、不可重复的String集合。Sorted Set中的每个元素都需要指派一个分数(score)，Sorted Set会根据score对元素进行升序排序。如果多个member拥有相同的score，则以字典序进行升序排序。
-Sorted Set非常适合用于实现排名。
-Sorted Set的主要命令：
+`Redis Sorted Set`是有序的、不可重复的`String`集合。`Sorted Set`中的每个元素都需要指派一个分数(`score`)，`Sorted Set`会根据`score`对元素进行升序排序。如果多个`member`拥有相同的`score`，则以字典序进行升序排序。
+
+`Sorted Set`非常适合用于实现排名。
+`Sorted Set`的主要命令：
 
 ZADD：向指定Sorted Set中添加1个或多个member，时间复杂度O(Mlog(N))，M为添加的member数量，N为Sorted Set中的member数量
 ZREM：从指定Sorted Set中删除1个或多个member，时间复杂度O(Mlog(N))，M为删除的member数量，N为Sorted Set中的member数量
