@@ -195,45 +195,60 @@ INCRBY sequence 100
 
 慎用的`Sorted Set`相关命令：
 
-ZRANGE/ZREVRANGE：返回指定Sorted Set中指定排名范围内的所有member，ZRANGE为按score升序排序，ZREVRANGE为按score降序排序，时间复杂度O(log(N)+M)，M为本次返回的member数
-ZRANGEBYSCORE/ZREVRANGEBYSCORE：返回指定Sorted Set中指定score范围内的所有member，返回结果以升序/降序排序，min和max可以指定为-inf和+inf，代表返回所有的member。时间复杂度O(log(N)+M)
-ZREMRANGEBYRANK/ZREMRANGEBYSCORE：移除Sorted Set中指定排名范围/指定score范围内的所有member。时间复杂度O(log(N)+M)
-上述几个命令，应尽量避免传递[0 -1]或[-inf +inf]这样的参数，来对Sorted Set做一次性的完整遍历，特别是在Sorted Set的尺寸不可预知的情况下。可以通过ZSCAN命令来进行游标式的遍历（具体请见 https://redis.io/commands/scan ），或通过LIMIT参数来限制返回member的数量（适用于ZRANGEBYSCORE和ZREVRANGEBYSCORE命令），以实现游标式的遍历。
+- `ZRANGE/ZREVRANGE`：返回指定`Sorted Set`中指定排名范围内的所有`member`，`ZRANGE`为按`score`升序排序，`ZREVRANGE`为按`score`降序排序，时间复杂度`O(log(N)+M)`，`M`为本次返回的`member`数
+- `ZRANGEBYSCORE/ZREVRANGEBYSCORE`：返回指定`Sorted Set`中指定`score`范围内的所有`member`，返回结果以升序/降序排序，`min`和`max`可以指定为`-inf`和`+inf`，代表返回所有的`member`。时间复杂度`O(log(N)+M)`
+- `ZREMRANGEBYRANK/ZREMRANGEBYSCORE`：移除`Sorted Set`中指定排名范围/指定`score`范围内的所有`member`。时间复杂度`O(log(N)+M)`
 
-Bitmap和HyperLogLog
+上述几个命令，应尽量避免传递`[0 -1]`或`[-inf +inf]`这样的参数，来对`Sorted Set`做一次性的完整遍历，特别是在`Sorted Set`的尺寸不可预知的情况下。
 
-Redis的这两种数据结构相较之前的并不常用，在本文中只做简要介绍，如想要详细了解这两种数据结构与其相关的命令，请参考官方文档 https://redis.io/topics/data-types-intro 中的相关章节
-Bitmap在Redis中不是一种实际的数据类型，而是一种将String作为Bitmap使用的方法。可以理解为将String转换为bit数组。使用Bitmap来存储true/false类型的简单数据极为节省空间。
-HyperLogLogs是一种主要用于数量统计的数据结构，它和Set类似，维护一个不可重复的String集合，但是HyperLogLogs并不维护具体的member内容，只维护member的个数。也就是说，HyperLogLogs只能用于计算一个集合中不重复的元素数量，所以它比Set要节省很多内存空间。
-其他常用命令
+可以通过`ZSCAN`命令来进行游标式的遍历（具体请见 [https://redis.io/commands/scan](https://redis.io/commands/scan) ），或通过`LIMIT`参数来限制返回`member`的数量（适用于`ZRANGEBYSCORE`和`ZREVRANGEBYSCORE`命令），以实现游标式的遍历。
 
-EXISTS：判断指定的key是否存在，返回1代表存在，0代表不存在，时间复杂度O(1)
-DEL：删除指定的key及其对应的value，时间复杂度O(N)，N为删除的key数量
-EXPIRE/PEXPIRE：为一个key设置有效期，单位为秒或毫秒，时间复杂度O(1)
-TTL/PTTL：返回一个key剩余的有效时间，单位为秒或毫秒，时间复杂度O(1)
-RENAME/RENAMENX：将key重命名为newkey。使用RENAME时，如果newkey已经存在，其值会被覆盖；使用RENAMENX时，如果newkey已经存在，则不会进行任何操作，时间复杂度O(1)
-TYPE：返回指定key的类型，string, list, set, zset, hash。时间复杂度O(1)
-CONFIG GET：获得Redis某配置项的当前值，可以使用*通配符，时间复杂度O(1)
-CONFIG SET：为Redis某个配置项设置新值，时间复杂度O(1)
-CONFIG REWRITE：让Redis重新加载redis.conf中的配置
+`Bitmap`和`HyperLogLog`
+
+`Redis`的这两种数据结构相较之前的并不常用，在本文中只做简要介绍，如想要详细了解这两种数据结构与其相关的命令，请参考官方文档 [https://redis.io/topics/data-types-intro](https://redis.io/topics/data-types-intro) 中的相关章节
+
+`Bitmap`在`Redis`中不是一种实际的数据类型，而是一种将`String`作为`Bitmap`使用的方法。可以理解为将`String`转换为`bit`数组。使用`Bitmap`来存储`true/false`类型的简单数据极为节省空间。
+
+`HyperLogLogs`是一种主要用于数量统计的数据结构，它和`Set`类似，维护一个不可重复的`String`集合，但是`HyperLogLogs`并不维护具体的`member`内容，只维护`member`的个数。
+
+也就是说，`HyperLogLogs`只能用于计算一个集合中不重复的元素数量，所以它比`Set`要节省很多内存空间。
+
+#### 其他常用命令
+
+- `EXISTS`：判断指定的`key`是否存在，返回1代表存在，**0**代表不存在，时间复杂度`O(1)`
+- `DEL`：删除指定的`key`及其对应的`value`，时间复杂度`O(N)`，`N`为删除的`key`数量
+- `EXPIRE/PEXPIRE`：为一个`key`设置有效期，单位为秒或毫秒，时间复杂度`O(1)`
+- `TTL/PTTL`：返回一个`key`剩余的有效时间，单位为秒或毫秒，时间复杂度`O(1)`
+- `RENAME/RENAMENX`：将`key`重命名为`newkey`。使用`RENAME`时，如果`newkey`已经存在，其值会被覆盖；使用`RENAMENX`时，如果`newkey`已经存在，则不会进行任何操作，时间复杂度`O(1)`
+- `TYPE`：返回指定`key`的类型，`string`, `list`, `set`, `zset`, `hash`。时间复杂度`O(1)`
+- `CONFIG GET`：获得`Redis`某配置项的当前值，可以使用`*`通配符，时间复杂度`O(1)`
+- `CONFIG SET`：为`Redis`某个配置项设置新值，时间复杂度`O(1)`
+- `CONFIG REWRITE`：让`Redis`重新加载`redis.conf`中的配置
 数据持久化
-Redis提供了将数据定期自动持久化至硬盘的能力，包括RDB和AOF两种方案，两种方案分别有其长处和短板，可以配合起来同时运行，确保数据的稳定性。
+- `Redis`提供了将数据定期自动持久化至硬盘的能力，包括`RDB`和`AOF`两种方案，两种方案分别有其长处和短板，可以配合起来同时运行，确保数据的稳定性。
 
-必须使用数据持久化吗？
+### 必须使用数据持久化吗？
 
-Redis的数据持久化机制是可以关闭的。如果你只把Redis作为缓存服务使用，Redis中存储的所有数据都不是该数据的主体而仅仅是同步过来的备份，那么可以关闭Redis的数据持久化机制。
+`Redis`的数据持久化机制是可以关闭的。如果你只把`Redis`作为缓存服务使用，`Redis`中存储的所有数据都不是该数据的主体而仅仅是同步过来的备份，那么可以关闭`Redis`的数据持久化机制。
 
-但通常来说，仍然建议至少开启RDB方式的数据持久化，因为：
+但通常来说，仍然建议至少开启`RDB`方式的数据持久化，因为：
 
-RDB方式的持久化几乎不损耗Redis本身的性能，在进行RDB持久化时，Redis主进程唯一需要做的事情就是fork出一个子进程，所有持久化工作都由子进程完成
-Redis无论因为什么原因crash掉之后，重启时能够自动恢复到上一次RDB快照中记录的数据。这省去了手工从其他数据源（如DB）同步数据的过程，而且要比其他任何的数据恢复方式都要快
+`RDB`方式的持久化几乎不损耗`Redis`本身的性能，在进行`RDB`持久化时，`Redis`主进程唯一需要做的事情就是`fork`出一个子进程，所有持久化工作都由子进程完成
+
+`Redis`无论因为什么原因`crash`掉之后，重启时能够自动恢复到上一次`RDB`快照中记录的数据。这省去了手工从其他数据源（如`DB`）同步数据的过程，而且要比其他任何的数据恢复方式都要快
 现在硬盘那么大，真的不缺那一点地方
-RDB
-采用RDB持久方式，
 
-Redis会定期保存数据快照至一个rbd文件中，并在启动时自动加载rdb文件，恢复之前保存的数据。可以在配置文件中配置Redis进行快照保存的时机：
-save [seconds] [changes]
-意为在[seconds]秒内如果发生了[changes]次数据修改，则进行一次RDB快照保存，例如
+##### RDB
+
+采用`RDB`持久方式，
+
+`Redis`会定期保存数据快照至一个`rbd`文件中，并在启动时自动加载`rdb`文件，恢复之前保存的数据。可以在配置文件中配置`Redis`进行快照保存的时机：
+
+```
+$ save [seconds] [changes]
+```
+
+意为在`[seconds]`秒内如果发生了`[changes]`次数据修改，则进行一次`RDB`快照保存，例如
 
 save 60 100
 会让Redis每60秒检查一次数据变更情况，如果发生了100次或以上的数据变更，则进行RDB快照保存。
