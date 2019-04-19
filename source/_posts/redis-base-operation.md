@@ -32,7 +32,7 @@ tags:
 
 不要使用过长的`Key`。例如使用一个**1024**字节的`key`就不是一个好主意，不仅会消耗更多的内存，还会导致查找的效率降低
 
-`Key`短到缺失了可读性也是不好的，例如`”u1000flw”比起”user:1000:followers”`来说，节省了寥寥的存储空间，却引发了可读性和可维护性上的麻烦
+`Key`短到缺失了可读性也是不好的，例如`u1000flw`比起`user:1000:followers`来说，节省了寥寥的存储空间，却引发了可读性和可维护性上的麻烦
 
 最好使用统一的规范来设计`Key`，比如`”object-type:id:attr”`，以这一规范设计出的`Key`可能是`”user:1000″或”comment:1234:reply-to”`
 
@@ -44,6 +44,7 @@ tags:
 
 与`String`相关的常用命令：
 
+
 - `SET`：为一个`key`设置`value`，可以配合`EX/PX`参数指定`key`的有效期，通过`NX/XX`参数针对`key`是否存在的情况进行区别操作，时间复杂度`O(1)`
 - `GET`：获取某个`key`对应的`value`，时间复杂度`O(1)`
 - `GETSET`：为一个`key`设置`value`，并返回该`key`的原`value`，时间复杂度`O(1)`
@@ -51,12 +52,15 @@ tags:
 - `MSETNX`：同`MSET`，如果指定的`key`中有任意一个已存在，则不进行任何操作，时间复杂度`O(N)`
 - `MGET`：获取多个`key`对应的`value`，时间复杂度`O(N)`
 
+
 上文提到过，`Redis`的基本数据类型只有`String`，但`Redis`可以把`String`作为整型或浮点型数字来使用，主要体现在`INCR`、`DECR`类的命令上：
+
 
 - `INCR`：将`key`对应的`value`值自增**1**，并返回自增后的值。只对可以转换为整型的`String`数据起作用。时间复杂度`O(1)`
 - `INCRBY`：将`key`对应的`value`值自增指定的整型数值，并返回自增后的值。只对可以转换为整型的`String`数据起作用。时间复杂度`O(1)`
 - `DECR/DECRBY`：同`INCR/INCRBY`，自增改为自减。
 - `INCR/DECR`系列命令要求操作的`value`类型为`String`，并可以转换为**64**位带符号的整型数字，否则会返回错误。
+
 
 也就是说，进行`INCR/DECR`系列命令的`value`，必须在`[-2^63 ~ 2^63 – 1]`范围内。
 
@@ -100,6 +104,7 @@ INCRBY sequence 100
 
 与`List`相关的常用命令：
 
+
 - `LPUSH`：向指定`List`的左侧（即头部）插入**1**个或多个元素，返回插入后的`List`长度。时间复杂度`O(N)`，`N`为插入元素的数量
 - `RPUSH`：同`LPUSH`，向指定`List`的右侧（即尾部）插入**1**或多个元素
 - `LPOP`：从指定`List`的左侧（即头部）移除一个元素并返回，时间复杂度`O(1)`
@@ -108,11 +113,14 @@ INCRBY sequence 100
 - `LLEN`：返回指定`List`的长度，时间复杂度`O(1)`
 - `LRANGE`：返回指定`List`中指定范围的元素（双端包含，即`LRANGE key 0 10`会返回`11`个元素），时间复杂度`O(N)`。应尽可能控制一次获取的元素数量，一次获取过大范围的`List`元素会导致延迟，同时对长度不可预知的`List`，避免使用`LRANGE key 0 -1`这样的完整遍历操作。
 
+
 应谨慎使用的`List`相关命令：
+
 
 - `LINDEX`：返回指定`List`指定`index`上的元素，如果`index`越界，返回`nil`。`index`数值是回环的，即`-1`代表`List`最后一个位置，`-2`代表List倒数第二个位置。时间复杂度`O(N)`
 - `LSET`：将指定`List`指定`index`上的元素设置为`value`，如果`index`越界则返回错误，时间复杂度`O(N)`，如果操作的是头/尾部的元素，则时间复杂度为`O(1)`
 - `LINSERT`：向指定`List`中指定元素之前/之后插入一个新元素，并返回操作后的`List`长度。如果指定的元素不存在，返回`-1`。如果指定`key`不存在，不会进行任何操作，时间复杂度`O(N)`
+
 
 由于`Redis`的`List`是链表结构的，上述的三个命令的算法效率较低，需要对`List`进行遍历，命令的耗时无法预估，在`List`长度大的情况下耗时会明显增加，应谨慎使用。
 
@@ -136,6 +144,7 @@ INCRBY sequence 100
 
 与`Hash`相关的常用命令
 
+
 - `HSET`：将`key`对应的`Has`h中的`field`设置为`value`。如果该`Hash`不存在，会自动创建一个。时间复杂度`O(1)`
 - `HGET`：返回指定`Hash`中f`ield`字段的值，时间复杂度`O(1)`
 - `HMSET/HMGET`：同`HSET`和`HGET`，可以批量操作同一个`key`下的多个`field`，时间复杂度：`O(N)`，`N`为一次操作的`field`数量
@@ -145,10 +154,13 @@ INCRBY sequence 100
 - `HINCRBY`：同`INCRBY`命令，对指定`Hash`中的一个`field`进行`INCRBY`，时间复杂度`O(1)`
 
 
+
 应谨慎使用的`Hash`相关命令：
+
 
 - `HGETALL`：返回指定`Hash`中所有的`field-value`对。返回结果为数组，数组中`field`和`value`交替出现。时间复杂度`O(N)`
 - `HKEYS/HVALS`：返回指定Hash中所有的`field/value`，时间复杂度`O(N)`
+
 
 上述三个命令都会对`Hash`进行完整遍历，`Hash`中的`field`数量与命令的耗时线性相关，对于尺寸不可预知的`Hash`，应严格避免使用上面三个命令，而改为使用HSCAN命令进行游标式的遍历，具体请见 
 [https://redis.io/commands/scan](https://redis.io/commands/scan)
@@ -159,6 +171,7 @@ INCRBY sequence 100
 
 与`Set`相关的常用命令
 
+
 - `SADD`：向指定`Set`中添加**1**个或多个`member`，如果指定`Set`不存在，会自动创建一个。时间复杂度`O(N)`，`N`为添加的`member`个数
 - `SREM`：从指定`Set`中移除**1**个或多个`member`，时间复杂度`O(N)`，`N`为移除的`member`个数
 - `SRANDMEMBER`：从指定`Set`中随机返回**1**个或多个`member`，时间复杂度`O(N)`，`N`为返回的`member`个数
@@ -167,12 +180,15 @@ INCRBY sequence 100
 - `SISMEMBER`：判断指定的`value`是否存在于指定`Set`中，时间复杂度`O(1)`
 - `SMOVE`：将指定`member`从一个`Set`移至另一个`Set`
 
+
 慎用的`Set`相关命令：
+
 
 - `SMEMBERS`：返回指定`Hash`中所有的`member`，时间复杂度`O(N)`
 - `SUNION/SUNIONSTORE`：计算多个`Set`的并集并返回/存储至另一个`Set`中，时间复杂度`O(N)`，`N`为参与计算的所有集合的总`member`数
 - `SINTER/SINTERSTORE`：计算多个`Set`的交集并返回/存储至另一个`Set`中，时间复杂度`O(N)`，`N`为参与计算的所有集合的总`member`数
 - `SDIFF/SDIFFSTORE`：计算**1**个`Set`与**1**或多个`Set`的差集并返回/存储至另一个`Set`中，时间复杂度`O(N)`，`N`为参与计算的所有集合的总`member`数
+
 
 上述几个命令涉及的计算量大，应谨慎使用，特别是在参与计算的`Set`尺寸不可知的情况下，应严格避免使用。
 
@@ -185,6 +201,7 @@ INCRBY sequence 100
 `Sorted Set`非常适合用于实现排名。
 `Sorted Set`的主要命令：
 
+
 - `ZADD`：向指定`Sorted Set`中添加**1**个或多个`member`，时间复杂度`O(Mlog(N))`，`M`为添加的`member`数量，`N`为`Sorted Set`中的`member`数量
 - `ZREM`：从指定`Sorted Set`中删除**1**个或多个`member`，时间复杂度`O(Mlog(N))`，`M`为删除的`member`数量，`N`为`Sorted Set`中的`member`数量
 - `ZCOUNT`：返回指定`Sorted Set`中指定`score`范围内的`member`数量，时间复杂度：`O(log(N))`
@@ -193,11 +210,14 @@ INCRBY sequence 100
 - `ZRANK/ZREVRANK`：返回指定`member`在`Sorted Set`中的排名，`ZRANK`返回按升序排序的排名，`ZREVRANK`则返回按降序排序的排名。时间复杂度`O(log(N))`
 - `ZINCRBY`：同`INCRBY`，对指定`Sorted Set`中的指定`member`的`score`进行自增，时间复杂度`O(log(N))`
 
+
 慎用的`Sorted Set`相关命令：
+
 
 - `ZRANGE/ZREVRANGE`：返回指定`Sorted Set`中指定排名范围内的所有`member`，`ZRANGE`为按`score`升序排序，`ZREVRANGE`为按`score`降序排序，时间复杂度`O(log(N)+M)`，`M`为本次返回的`member`数
 - `ZRANGEBYSCORE/ZREVRANGEBYSCORE`：返回指定`Sorted Set`中指定`score`范围内的所有`member`，返回结果以升序/降序排序，`min`和`max`可以指定为`-inf`和`+inf`，代表返回所有的`member`。时间复杂度`O(log(N)+M)`
 - `ZREMRANGEBYRANK/ZREMRANGEBYSCORE`：移除`Sorted Set`中指定排名范围/指定`score`范围内的所有`member`。时间复杂度`O(log(N)+M)`
+
 
 上述几个命令，应尽量避免传递`[0 -1]`或`[-inf +inf]`这样的参数，来对`Sorted Set`做一次性的完整遍历，特别是在`Sorted Set`的尺寸不可预知的情况下。
 
@@ -215,6 +235,7 @@ INCRBY sequence 100
 
 #### 其他常用命令
 
+
 - `EXISTS`：判断指定的`key`是否存在，返回1代表存在，**0**代表不存在，时间复杂度`O(1)`
 - `DEL`：删除指定的`key`及其对应的`value`，时间复杂度`O(N)`，`N`为删除的`key`数量
 - `EXPIRE/PEXPIRE`：为一个`key`设置有效期，单位为秒或毫秒，时间复杂度`O(1)`
@@ -224,8 +245,11 @@ INCRBY sequence 100
 - `CONFIG GET`：获得`Redis`某配置项的当前值，可以使用`*`通配符，时间复杂度`O(1)`
 - `CONFIG SET`：为`Redis`某个配置项设置新值，时间复杂度`O(1)`
 - `CONFIG REWRITE`：让`Redis`重新加载`redis.conf`中的配置
-数据持久化
-- `Redis`提供了将数据定期自动持久化至硬盘的能力，包括`RDB`和`AOF`两种方案，两种方案分别有其长处和短板，可以配合起来同时运行，确保数据的稳定性。
+
+
+#### 数据持久化
+
+`Redis`提供了将数据定期自动持久化至硬盘的能力，包括`RDB`和`AOF`两种方案，两种方案分别有其长处和短板，可以配合起来同时运行，确保数据的稳定性。
 
 ### 必须使用数据持久化吗？
 
@@ -264,6 +288,7 @@ save 900 1
 save 300 10
 save 60 10000
 ```
+
 也可以通过`BGSAVE`命令手工触发`RDB`快照保存。
 
 ### RDB的优点：
@@ -293,17 +318,28 @@ appendonly yes
 
 通过配置项`[appendfsync]`指定
 
+
 - `appendfsync no`：不进行`fsync`，将`flush`文件的时机交给`OS`决定，速度最快
 - `appendfsync always`：每写入一条日志就进行一次`fsync`操作，数据安全性最高，但速度最慢
 - `appendfsync everysec`：折中的做法，交由后台线程每秒`fsync`一次
 
-随着AOF不断地记录写操作日志，必定会出现一些无用的日志，例如某个时间点执行了命令SET key1 “abc”，在之后某个时间点又执行了SET key1 “bcd”，那么第一条命令很显然是没有用的。大量的无用日志会让AOF文件过大，也会让数据恢复的时间过长。
-所以Redis提供了AOF rewrite功能，可以重写AOF文件，只保留能够把数据恢复到最新状态的最小写操作集。
-AOF rewrite可以通过BGREWRITEAOF命令触发，也可以配置Redis定期自动进行：
+
+随着`AOF`不断地记录写操作日志，必定会出现一些无用的日志，例如某个时间点执行了命令`SET key1`“abc”，在之后某个时间点又执行了`SET key1 `“bcd”，那么第一条命令很显然是没有用的。
+
+大量的无用日志会让`AOF`文件过大，也会让数据恢复的时间过长。
+所以`Redis`提供了`AOF rewrite`功能，可以重写`AOF`文件，只保留能够把数据恢复到最新状态的最小写操作集。
+
+`AOF rewrite`可以通过`BGREWRITEAOF`命令触发，也可以配置`Redis`定期自动进行：
+
+```
 auto-aof-rewrite-percentage 100
 auto-aof-rewrite-min-size 64mb
-上面两行配置的含义是，Redis在每次AOF rewrite时，会记录完成rewrite后的AOF日志大小，当AOF日志大小在该基础上增长了100%后，自动进行AOF rewrite。同时如果增长的大小没有达到64mb，则不会进行rewrite。
-AOF的优点：
+```
+
+上面两行配置的含义是，`Redis`在每次`AOF` `rewrite`时，会记录完成`rewrite`后的`AOF`日志大小，当`AOF`日志大小在该基础上增长了**100%**后，自动进行`AOF rewrite`。同时如果增长的大小没有达到**64mb**，则不会进行`rewrite`。
+
+
+#### AOF的优点：
 
 最安全，在启用appendfsync always时，任何已写入的数据都不会丢失，使用在启用appendfsync everysec也至多只会丢失1秒的数据。
 AOF文件在发生断电等问题时也不会损坏，即使出现了某条日志只写入了一半的情况，也可以使用redis-check-aof工具轻松修复。
