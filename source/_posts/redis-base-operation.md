@@ -465,46 +465,69 @@ EXEC
 
 `Redis`在接收到`MULTI`命令后便会开启一个事务，这之后的所有读写命令都会保存在队列中但并不执行，直到接收到`EXEC`命令后，`Redis`会把队列中的所有命令连续顺序执行，并以数组形式返回每个命令的返回结果。
 
-可以使用DISCARD命令放弃当前的事务，将保存的命令队列清空。
-需要注意的是，Redis事务不支持回滚：
-如果一个事务中的命令出现了语法错误，大部分客户端驱动会返回错误，2.6.5版本以上的Redis也会在执行EXEC时检查队列中的命令是否存在语法错误，如果存在，则会自动放弃事务并返回错误。
-但如果一个事务中的命令有非语法类的错误（比如对String执行HSET操作），无论客户端驱动还是Redis都无法在真正执行这条命令之前发现，所以事务中的所有命令仍然会被依次执行。在这种情况下，会出现一个事务中部分命令成功部分命令失败的情况，然而与RDBMS不同，Redis不提供事务回滚的功能，所以只能通过其他方法进行数据的回滚。
-通过事务实现CAS
-Redis提供了WATCH命令与事务搭配使用，实现CAS乐观锁的机制。
+可以使用`DISCARD`命令放弃当前的事务，将保存的命令队列清空。
+
+需要注意的是，`Redis`事务不支持回滚：
+
+如果一个事务中的命令出现了语法错误，大部分客户端驱动会返回错误，**2.6.5**版本以上的`Redis`也会在执行`EXEC`时检查队列中的命令是否存在语法错误，如果存在，则会自动放弃事务并返回错误。
+
+但如果一个事务中的命令有非语法类的错误（比如对`String`执行`HSET`操作），无论客户端驱动还是`Redis`都无法在真正执行这条命令之前发现，所以事务中的所有命令仍然会被依次执行。
+
+在这种情况下，会出现一个事务中部分命令成功部分命令失败的情况，然而与`RDBMS`不同，`Redis`不提供事务回滚的功能，所以只能通过其他方法进行数据的回滚。
+
+通过事务实现`CAS`
+`Redis`提供了`WATCH`命令与事务搭配使用，实现`CAS`乐观锁的机制。
 
 假设要实现将某个商品的状态改为已售：
 
+```
 if(exec(HGET stock:1001 state) == "in stock")
     exec(HSET stock:1001 state "sold");
-这一伪代码执行时，无法确保并发安全性，有可能多个客户端都获取到了”in stock”的状态，导致一个库存被售卖多次。
-使用WATCH命令和事务可以解决这一问题：
+```
 
+这一伪代码执行时，无法确保并发安全性，有可能多个客户端都获取到了`”in stock”`的状态，导致一个库存被售卖多次。
+
+使用`WATCH`命令和事务可以解决这一问题：
+
+```
 exec(WATCH stock:1001);
 if(exec(HGET stock:1001 state) == "in stock") {
     exec(MULTI);
     exec(HSET stock:1001 state "sold");
     exec(EXEC);
 }
-WATCH的机制是：在事务EXEC命令执行时，Redis会检查被WATCH的key，只有被WATCH的key从WATCH起始时至今没有发生过变更，EXEC才会被执行。如果WATCH的key在WATCH命令到EXEC命令之间发生过变化，则EXEC命令会返回失败。
+```
 
-Scripting
+`WATCH`的机制是：在事务`EXEC`命令执行时，`Redis`会检查被`WATCH`的`key`，只有被`WATCH`的`key`从`WATCH`起始时至今没有发生过变更，`EXEC`才会被执行。
 
-通过EVAL与EVALSHA命令，可以让Redis执行LUA脚本。这就类似于RDBMS的存储过程一样，可以把客户端与Redis之间密集的读/写交互放在服务端进行，避免过多的数据交互，提升性能。
-Scripting功能是作为事务功能的替代者诞生的，事务提供的所有能力Scripting都可以做到。Redis官方推荐使用LUA Script来代替事务，前者的效率和便利性都超过了事务。
-关于Scripting的具体使用，本文不做详细介绍，请参考官方文档
-https://redis.io/commands/eval
-Redis性能调优
-尽管Redis是一个非常快速的内存数据存储媒介，也并不代表Redis不会产生性能问题。
-前文中提到过，Redis采用单线程模型，所有的命令都是由一个线程串行执行的，所以当某个命令执行耗时较长时，会拖慢其后的所有命令，这使得Redis对每个任务的执行效率更加敏感。
-针对Redis的性能优化，主要从下面几个层面入手：
+如果`WATCH`的`key`在`WATCH`命令到`EXEC`命令之间发生过变化，则`EXEC`命令会返回失败。
 
-最初的也是最重要的，确保没有让Redis执行耗时长的命令
-使用pipelining将连续执行的命令组合执行
-操作系统的Transparent huge pages功能必须关闭：
-echo never > /sys/kernel/mm/transparent_hugepage/enabled
-如果在虚拟机中运行Redis，可能天然就有虚拟机环境带来的固有延迟。可以通过./redis-cli –intrinsic-latency 100命令查看固有延迟。同时如果对Redis的性能有较高要求的话，应尽可能在物理机上直接部署Redis。
-检查数据持久化策略
-考虑引入读写分离机制
+#### Scripting
+
+通过`EVAL`与`EVALSHA`命令，可以让`Redis`执行`LUA`脚本。这就类似于`RDBMS`的存储过程一样，可以把客户端与`Redis`之间密集的读/写交互放在服务端进行，避免过多的数据交互，提升性能。
+
+`Scripting`功能是作为事务功能的替代者诞生的，事务提供的所有能力`Scripting`都可以做到。`Redis`官方推荐使用`LUA Script`来代替事务，前者的效率和便利性都超过了事务。
+
+关于`Scripting`的具体使用，本文不做详细介绍，请参考官方文档
+[https://redis.io/commands/eval](https://redis.io/commands/eval)
+
+#### Redis性能调优
+
+尽管`Redis`是一个非常快速的内存数据存储媒介，也并不代表`Redis`不会产生性能问题。
+
+前文中提到过，`Redis`采用单线程模型，所有的命令都是由一个线程串行执行的，所以当某个命令执行耗时较长时，会拖慢其后的所有命令，这使得`Redis`对每个任务的执行效率更加敏感。
+
+针对`Redis`的性能优化，主要从下面几个层面入手：
+
+- 最初的也是最重要的，确保没有让`Redis`执行耗时长的命令
+- 使用`pipelining`将连续执行的命令组合执行
+- 操作系统的`Transparent huge pages`功能必须关闭：
+- `echo never > /sys/kernel/mm/transparent_hugepage/enabled`
+   如果在虚拟机中运行`Redis`，可能天然就有虚拟机环境带来的固有延迟。
+   可以通过`./redis-cli –intrinsic-latency `100命令查看固有延迟。同时如果对`Redis`的性能有较高要求的话，应尽可能在物理机上直接部署`Redis`。
+- 检查数据持久化策略
+- 考虑引入读写分离机制
+
 长耗时命令
 Redis绝大多数读写命令的时间复杂度都在O(1)到O(N)之间，在文本和官方文档中均对每个命令的时间复杂度有说明。
 通常来说，O(1)的命令是安全的，O(N)命令在使用时需要注意，如果N的数量级不可预知，则应避免使用。例如对一个field数未知的Hash数据执行HGETALL/HKEYS/HVALS命令，通常来说这些命令执行的很快，但如果这个Hash中的field数量极多，耗时就会成倍增长。
