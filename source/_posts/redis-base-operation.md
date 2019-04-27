@@ -528,27 +528,34 @@ if(exec(HGET stock:1001 state) == "in stock") {
 - 检查数据持久化策略
 - 考虑引入读写分离机制
 
-长耗时命令
-Redis绝大多数读写命令的时间复杂度都在O(1)到O(N)之间，在文本和官方文档中均对每个命令的时间复杂度有说明。
-通常来说，O(1)的命令是安全的，O(N)命令在使用时需要注意，如果N的数量级不可预知，则应避免使用。例如对一个field数未知的Hash数据执行HGETALL/HKEYS/HVALS命令，通常来说这些命令执行的很快，但如果这个Hash中的field数量极多，耗时就会成倍增长。
-又如使用SUNION对两个Set执行Union操作，或使用SORT对List/Set执行排序操作等时，都应该严加注意。
-避免在使用这些O(N)命令时发生问题主要有几个办法：
+#### 长耗时命令
 
-不要把List当做列表使用，仅当做队列来使用
-通过机制严格控制Hash、Set、Sorted Set的大小
-可能的话，将排序、并集、交集等操作放在客户端执行
-绝对禁止使用KEYS命令
-避免一次性遍历集合类型的所有成员，而应使用SCAN类的命令进行分批的，游标式的遍历
-Redis提供了SCAN命令，可以对Redis中存储的所有key进行游标式的遍历，避免使用KEYS命令带来的性能问题。同时还有SSCAN/HSCAN/ZSCAN等命令，分别用于对Set/Hash/Sorted Set中的元素进行游标式遍历。SCAN类命令的使用请参考官方文档：
-https://redis.io/commands/scan
+`Redis`绝大多数读写命令的时间复杂度都在`O(1)`到`O(N)`之间，在文本和官方文档中均对每个命令的时间复杂度有说明。
 
-Redis提供了Slow Log功能，可以自动记录耗时较长的命令。相关的配置参数有两个：
+通常来说，`O(1)`的命令是安全的，`O(N)`命令在使用时需要注意，如果`N`的数量级不可预知，则应避免使用。
 
-slowlog-log-slower-than xxxms  #执行时间慢于xxx毫秒的命令计入Slow Log
-slowlog-max-len xxx  #Slow Log的长度，即最大纪录多少条Slow Log
-使用SLOWLOG GET [number]命令，可以输出最近进入Slow Log的number条命令。
-使用SLOWLOG RESET命令，可以重置Slow Log
-网络引发的延迟
+例如对一个`field`数未知的`Hash`数据执行`HGETALL/HKEYS/HVALS`命令，通常来说这些命令执行的很快，但如果这个`Hash`中的`field`数量极多，耗时就会成倍增长。
+
+又如使用`SUNION`对两个`Set`执行`Union`操作，或使用`SORT`对`List/Set`执行排序操作等时，都应该严加注意。
+
+避免在使用这些`O(N)`命令时发生问题主要有几个办法：
+
+- 不要把`List`当做列表使用，仅当做队列来使用
+- 通过机制严格控制`Hash`、`Set`、`Sorted Set`的大小
+- 可能的话，将排序、并集、交集等操作放在客户端执行
+- 绝对禁止使用`KEYS`命令
+- 避免一次性遍历集合类型的所有成员，而应使用`SCAN`类的命令进行分批的，游标式的遍历
+- `Redis`提供了`SCAN`命令，可以对`Redis`中存储的所有`key`进行游标式的遍历，避免使用`KEYS`命令带来的性能问题。同时还有`SSCAN/HSCAN/ZSCAN`等命令，分别用于对`Set/Hash/Sorted Set`中的元素进行游标式遍历。`SCAN`类命令的使用请参考官方文档：[https://redis.io/commands/scan](https://redis.io/commands/scan)
+
+`Redis`提供了`Slow Log`功能，可以自动记录耗时较长的命令。相关的配置参数有两个：
+
+- `slowlog-log-slower-than` `xxxms`  #执行时间慢于xxx毫秒的命令计入`Slow Log`
+- `slowlog-max-len` `xxx`  `#Slow Log的`长度，即最大纪录多少条`Slow Log`
+- 使用`SLOWLOG GET [number]`命令，可以输出最近进入`Slow Log`的`number`条命令。
+- 使用`SLOWLOG RESET`命令，可以重置`Slow Log`
+
+
+#### 网络引发的延迟
 
 尽可能使用长连接或连接池，避免频繁创建销毁连接
 客户端进行的批量数据操作，应使用Pipeline特性在一次交互中完成。具体请参照本文的Pipelining章节
