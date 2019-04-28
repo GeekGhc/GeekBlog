@@ -557,50 +557,67 @@ if(exec(HGET stock:1001 state) == "in stock") {
 
 #### 网络引发的延迟
 
-尽可能使用长连接或连接池，避免频繁创建销毁连接
-客户端进行的批量数据操作，应使用Pipeline特性在一次交互中完成。具体请参照本文的Pipelining章节
-数据持久化引发的延迟
-Redis的数据持久化工作本身就会带来延迟，需要根据数据的安全级别和性能要求制定合理的持久化策略：
+- 尽可能使用长连接或连接池，避免频繁创建销毁连接
+- 客户端进行的批量数据操作，应使用`Pipeline`特性在一次交互中完成。具体请参照本文的`Pipelining`章节
 
-AOF + fsync always的设置虽然能够绝对确保数据安全，但每个操作都会触发一次fsync，会对Redis的性能有比较明显的影响
-AOF + fsync every second是比较好的折中方案，每秒fsync一次
-AOF + fsync never会提供AOF持久化方案下的最优性能
-使用RDB持久化通常会提供比使用AOF更高的性能，但需要注意RDB的策略配置
-每一次RDB快照和AOF Rewrite都需要Redis主进程进行fork操作。fork操作本身可能会产生较高的耗时，与CPU和Redis占用的内存大小有关。根据具体的情况合理配置RDB快照和AOF Rewrite时机，避免过于频繁的fork带来的延迟
-Redis在fork子进程时需要将内存分页表拷贝至子进程，以占用了24GB内存的Redis实例为例，共需要拷贝24GB / 4kB * 8 = 48MB的数据。在使用单Xeon 2.27Ghz的物理机上，这一fork操作耗时216ms。
+#### 数据持久化引发的延迟
+`Redis`的数据持久化工作本身就会带来延迟，需要根据数据的安全级别和性能要求制定合理的持久化策略：
 
-可以通过INFO命令返回的latest_fork_usec字段查看上一次fork操作的耗时（微秒）
+##### AOF + fsync 
+`always`的设置虽然能够绝对确保数据安全，但每个操作都会触发一次`fsync`，会对`Redis`的性能有比较明显的影响
 
-Swap引发的延迟
+`AOF` + `fsync every second`是比较好的折中方案，每秒`fsync`一次
+`AOF` + `fsync never`会提供`AOF`持久化方案下的最优性能
 
-当Linux将Redis所用的内存分页移至swap空间时，将会阻塞Redis进程，导致Redis出现不正常的延迟。Swap通常在物理内存不足或一些进程在进行大量I/O操作时发生，应尽可能避免上述两种情况的出现。
-/proc//smaps文件中会保存进程的swap记录，通过查看这个文件，能够判断Redis的延迟是否由Swap产生。如果这个文件中记录了较大的Swap size，则说明延迟很有可能是Swap造成的。
-数据淘汰引发的延迟
+使用`RDB`持久化通常会提供比使用`AOF`更高的性能，但需要注意`RDB`的策略配置
+每一次`RDB`快照和`AOF Rewrite`都需要`Redis`主进程进行`fork`操作。`fork`操作本身可能会产生较高的耗时，与`CPU`和`Redis`占用的内存大小有关。
 
-当同一秒内有大量key过期时，也会引发Redis的延迟。在使用时应尽量将key的失效时间错开。
+根据具体的情况合理配置`RDB`快照和`AOF Rewrite`时机，避免过于频繁的`fork`带来的延迟
+`Redis`在`fork`子进程时需要将内存分页表拷贝至子进程，以占用了**24GB**内存的`Redis`实例为例，共需要拷贝**24GB / 4kB * 8 = 48MB**的数据。在使用单`Xeon 2.27Ghz`的物理机上，这一`fork`操作耗时**216ms**。
 
-引入读写分离机制
+可以通过`INFO`命令返回的`latest_fork_usec`字段查看上一次`fork`操作的耗时（微秒）
 
-Redis的主从复制能力可以实现一主多从的多节点架构，在这一架构下，主节点接收所有写请求，并将数据同步给多个从节点。
+#### Swap引发的延迟
+
+当`Linux`将`Redis`所用的内存分页移至`swap`空间时，将会阻塞`Redis`进程，导致`Redis`出现不正常的延迟。`Swap`通常在物理内存不足或一些进程在进行大量`I/O`操作时发生，应尽可能避免上述两种情况的出现。
+
+`/proc//smaps`文件中会保存进程的`swap`记录，通过查看这个文件，能够判断`Redis`的延迟是否由`Swap`产生。如果这个文件中记录了较大的`Swap size`，则说明延迟很有可能是`Swap`造成的。
+
+#### 数据淘汰引发的延迟
+
+当同一秒内有大量`key`过期时，也会引发`Redis`的延迟。在使用时应尽量将`key`的失效时间错开。
+
+#### 引入读写分离机制
+
+`Redis`的主从复制能力可以实现一主多从的多节点架构，在这一架构下，主节点接收所有写请求，并将数据同步给多个从节点。
+
 在这一基础上，我们可以让从节点提供对实时性要求不高的读请求服务，以减小主节点的压力。
+
 尤其是针对一些使用了长耗时命令的统计类任务，完全可以指定在一个或多个从节点上执行，避免这些长耗时命令影响其他请求的响应。
-主从复制与集群分片
-主从复制
 
-Redis支持一主多从的主从复制架构。一个Master实例负责处理所有的写请求，Master将写操作同步至所有Slave。
+#### 主从复制与集群分片
 
-借助Redis的主从复制，可以实现读写分离和高可用：
+##### 主从复制
 
-实时性要求不是特别高的读请求，可以在Slave上完成，提升效率。特别是一些周期性执行的统计任务，这些任务可能需要执行一些长耗时的Redis命令，可以专门规划出1个或几个Slave用于服务这些统计任务
-借助Redis Sentinel可以实现高可用，当Master crash后，Redis Sentinel能够自动将一个Slave晋升为Master，继续提供服务
+`Redis`支持一主多从的主从复制架构。一个`Master`实例负责处理所有的写请求，`Master`将写操作同步至所有`Slave`。
 
-启用主从复制非常简单，只需要配置多个Redis实例，在作为Slave的Redis实例中配置：
+借助`Redis`的主从复制，可以实现读写分离和高可用：
 
+实时性要求不是特别高的读请求，可以在`Slave`上完成，提升效率。特别是一些周期性执行的统计任务，这些任务可能需要执行一些长耗时的`Redis`命令，可以专门规划出1个或几个Slave用于服务这些统计任务
+
+借助`Redis Sentinel`可以实现高可用，当`Master crash`后，`Redis Sentinel`能够自动将一个`Slave`晋升为`Master`，继续提供服务
+
+启用主从复制非常简单，只需要配置多个`Redis`实例，在作为`Slave`的`Redis`实例中配置：
+
+```
 slaveof 192.168.1.1 6379 #指定Master的IP和端口
+```
 
-当Slave启动后，会从Master进行一次冷启动数据同步，由Master触发BGSAVE生成RDB文件推送给Slave进行导入，导入完成后Master再将增量数据通过Redis Protocol同步给Slave。之后主从之间的数据便一直以Redis Protocol进行同步
+当`Slave`启动后，会从`Master`进行一次冷启动数据同步，由`Master`触发`BGSAVE`生成`RDB`文件推送给`Slave`进行导入，导入完成后`Master`再将增量数据通过`Redis Protocol`同步给`Slave`。
 
-使用Sentinel做自动failover
+之后主从之间的数据便一直以`Redis Protocol`进行同步
+
+#### 使用Sentinel做自动failover
 
 Redis的主从复制功能本身只是做数据同步，并不提供监控和自动failover能力，要通过主从复制功能来实现Redis的高可用，还需要引入一个组件：Redis Sentinel
 
