@@ -619,40 +619,45 @@ slaveof 192.168.1.1 6379 #指定Master的IP和端口
 
 #### 使用Sentinel做自动failover
 
-Redis的主从复制功能本身只是做数据同步，并不提供监控和自动failover能力，要通过主从复制功能来实现Redis的高可用，还需要引入一个组件：Redis Sentinel
+`Redis`的主从复制功能本身只是做数据同步，并不提供监控和自动`failover`能力，要通过主从复制功能来实现Redis的高可用，还需要引入一个组件：`Redis Sentinel`
 
-Redis Sentinel是Redis官方开发的监控组件，可以监控Redis实例的状态，通过Master节点自动发现Slave节点，并在监测到Master节点失效时选举出一个新的Master，并向所有Redis实例推送新的主从配置。
+`Redis Sentinel`是`Redis`官方开发的监控组件，可以监控`Redis`实例的状态，通过`Master`节点自动发现`Slave`节点，并在监测到`Master`节点失效时选举出一个新的`Master`，并向所有`Redis`实例推送新的主从配置。
 
-Redis Sentinel需要至少部署3个实例才能形成选举关系。
+`Redis Sentinel`需要至少部署3个实例才能形成选举关系。
 
-关键配置：
+#### 关键配置：
 
-另外需要注意的是，Redis Sentinel实现的自动failover不是在同一个IP和端口上完成的，也就是说自动failover产生的新Master提供服务的IP和端口与之前的Master是不一样的，所以要实现HA，还要求客户端必须支持Sentinel，能够与Sentinel交互获得新Master的信息才行。
+另外需要注意的是，`Redis Sentinel`实现的自动`failover`不是在同一个`IP`和端口上完成的，也就是说自动`failover`产生的新`Master`提供服务的`IP`和端口与之前的`Master`是不一样的，所以要实现`HA`，还要求客户端必须支持`Sentinel`，能够与`Sentinel`交互获得新`Master`的信息才行。
 
-集群分片
+#### 集群分片
 
 为何要做集群分片：
 
 
-Redis中存储的数据量大，一台主机的物理内存已经无法容纳
-Redis的写请求并发量大，一个Redis实例以无法承载
-当上述两个问题出现时，就必须要对Redis进行分片了。
+- `Redis`中存储的数据量大，一台主机的物理内存已经无法容纳
+- `Redis`的写请求并发量大，一个`Redis`实例以无法承载
+
+当上述两个问题出现时，就必须要对`Redis`进行分片了。
 
 
-Redis的分片方案有很多种，例如很多Redis的客户端都自行实现了分片功能，也有向Twemproxy这样的以代理方式实现的Redis分片方案。然而首选的方案还应该是Redis官方在3.0版本中推出的Redis Cluster分片方案。
-Redis Cluster的能力
+`Redis`的分片方案有很多种，例如很多`Redis`的客户端都自行实现了分片功能，也有向`Twemproxy`这样的以代理方式实现的`Redis`分片方案。然而首选的方案还应该是`Redis`官方在**3.0**版本中推出的`Redis Cluster`分片方案。
 
-能够自动将数据分散在多个节点上
-当访问的key不在当前分片上时，能够自动将请求转发至正确的分片
-当集群中部分节点失效时仍能提供服务
+#### Redis Cluster的能力
 
-其中第三点是基于主从复制来实现的，Redis Cluster的每个数据分片都采用了主从复制的结构，原理和前文所述的主从复制完全一致，唯一的区别是省去了Redis Sentinel这一额外的组件，由Redis Cluster负责进行一个分片内部的节点监控和自动failover。
+- 能够自动将数据分散在多个节点上
+- 当访问的`key`不在当前分片上时，能够自动将请求转发至正确的分片
+- 当集群中部分节点失效时仍能提供服务
 
-Redis Cluster分片原理
+其中第三点是基于主从复制来实现的，`Redis Cluster`的每个数据分片都采用了主从复制的结构，原理和前文所述的主从复制完全一致，唯一的区别是省去了`Redis Sentinel`这一额外的组件，由`Redis Cluster`负责进行一个分片内部的节点监控和自动`failover`。
 
-Redis Cluster中共有16384个hash slot，Redis会计算每个key的CRC16，将结果与16384取模，来决定该key存储在哪一个hash slot中，同时需要指定Redis Cluster中每个数据分片负责的Slot数。Slot的分配在任何时间点都可以进行重新分配。
-客户端在对key进行读写操作时，可以连接Cluster中的任意一个分片，如果操作的key不在此分片负责的Slot范围内，Redis Cluster会自动将请求重定向到正确的分片上。
-hash tags
+#### Redis Cluster分片原理
+
+`Redis Cluster`中共有**16384**个`hash slot`，`Redis`会计算每个`key`的`CRC16`，将结果与**16384**取模，来决定该`key`存储在哪一个`hash slot`中，同时需要指定`Redis Cluster`中每个数据分片负责的`Slot`数。
+
+`Slot`的分配在任何时间点都可以进行重新分配。
+客户端在对`key`进行读写操作时，可以连接`Cluster`中的任意一个分片，如果操作的`key`不在此分片负责的`Slot`范围内，`Redis Cluster`会自动将请求重定向到正确的分片上。
+
+#### hash tags
 
 在基础的分片原则上，Redis还支持hash tags功能，以hash tags要求的格式明明的key，将会确保进入同一个Slot中。例如：{uiv}user:1000和{uiv}user:1001拥有同样的hash tag {uiv}，会保存在同一个Slot中。
 使用Redis Cluster时，pipelining、事务和LUA Script功能涉及的key必须在同一个数据分片上，否则将会返回错误。如要在Redis Cluster中使用上述功能，就必须通过hash tags来确保一个pipeline或一个事务中操作的所有key都位于同一个Slot中。
