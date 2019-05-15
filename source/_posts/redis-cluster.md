@@ -43,11 +43,14 @@ tags:
 
 ![2](/images/articles/2019-03-02/002.png)
 
-本地安装`Redis`服务  我因为是mac环境  所以直接可以通过homebrew安装
+本地安装`Redis`服务  我因为是mac环境  所以直接可以通过`homebrew`安装
 
 ```shell
 $ brew install redis
 ```
+
+为了搭建  目录这里新建了**6**个节点目录
+![2](/images/articles/2019-03-02/002.png)
 
 
 
