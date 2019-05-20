@@ -52,10 +52,11 @@ $ brew install redis
 ```
 
 为了搭建  目录这里新建了**6**个节点目录
-![2](/images/articles/2019-03-02/002.png)
+![3](/images/articles/2019-03-02/003.png)
 
+将`redis`安装包 执行`bin`目录分别`copy`到每个节点目录
 
+![5](/images/articles/2019-03-02/005.png)
 
-
-
+复制`redis`的配置文件到每个节点  注意本机的`conf`文件的地址为 `/usr/local/etc/redis.conf`
 
