@@ -65,9 +65,63 @@ $ brew install redis
 
 将`redis`安装包 执行`bin`目录分别`copy`到每个节点目录
 
+可以看到redis bin目录下的一些redis执行命令文件
+
 ![5](/images/articles/2019-03-02/005.png)
 
+## 集群搭建
+将本地redis的redis-trib.rb复制到redis-cluster目录
+![6](/images/articles/2019-03-02/006.png)
+
 复制`redis`的配置文件到每个节点  注意本机的`conf`文件的地址为 `/usr/local/etc/redis.conf`
+![7](/images/articles/2019-03-02/007.png)
+
+完毕之后 集群文件的目录是这样的：
+![8](/images/articles/2019-03-02/008.png)
+
+接下来就是针对每个节点的配置了  这里我们进入节点目录下的配置文件redis.conf
+
+这里我们需要编辑的配置信息如下:
+
+```shell
+port 7001 //节点端口
+daemonize yes //配置redis作为守护进程运行，默认情况下，redis不是作为守护进程运行的
+bind 127.0.0.1                       //默认127.0.0.1，需要改为其他节点可访问的地址
+cluster-node-timeout 5000  //集群超时时间
+cluster-enabled yes  //redis 集群
+cluster-config-file nodes-7001.conf  //指定节点配置信息
+appendonly yes   //存储方式
+dir /Users/gehuachun/Develop/redis-cluster/redis01 //指定本地数据库路径
+```
+### 节点启动
+
+每个节点配置完毕之后开始依次启动每个节点 这里假设启动是06这个节点
+![9](/images/articles/2019-03-02/009.png)
+
+启动完毕之后查看redis的服务我们可以看到
+![10](/images/articles/2019-03-02/010.png)
+
+### 集群创建
+节点启动完毕之后开始创建集群 集群文件目录终端执行
+```shell
+redis-trib.rb create --replicas 1 127.0.0.1:7001 127.0.0.1:7002 127.0.0.1:7003 127.0.0.1:7004 127.0.0.1:7005 127.0.0.1:7006
+```
+
+> 其中--replices 1指定了为每个节点分配一个从节点
+
+![11](/images/articles/2019-03-02/011.png)
+
+安装过程如果遇到插件报错 可以尝试：
+![12](/images/articles/2019-03-02/012.png)
+
+那么在创建的过程中你将会看到如下信息：
+![13](/images/articles/2019-03-02/013.png)
+
+最终集群创建成功时 你会看到
+![15](/images/articles/2019-03-02/015.png)
+
+注意看后面的返回信息  这里指示了急群众主从节点的关系信息  比如：
+![16](/images/articles/2019-03-02/016.png)
 
 ## RedisCluster 缺陷
 1.键的批量操作支持有限，比如mset、mget,如果多个键映射再不同的槽，就不支持了
